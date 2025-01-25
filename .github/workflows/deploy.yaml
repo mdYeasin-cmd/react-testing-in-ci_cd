@@ -1,0 +1,23 @@
+name: React App Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.3
+
+      - name: Checkout code from repository
+        uses: actions/checkout@v4
+
+      - name: Check the codebase with environment
+        run: |
+          node -v
+          ls -la
