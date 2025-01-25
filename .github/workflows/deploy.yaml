@@ -20,4 +20,9 @@ jobs:
       - name: Check the codebase with environment
         run: |
           node -v
-          ls -la
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Test the codebase
+        run: npm run test
