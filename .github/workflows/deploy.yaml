@@ -26,3 +26,28 @@ jobs:
 
       - name: Test the codebase
         run: npm run test
+
+  build-code:
+    runs-on: ubuntu-latest
+    needs: test-code
+    steps:
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.3
+
+      - name: Checkout code from repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the code
+        run: npm run build
+
+  deploy-code:
+    runs-on: ubuntu-latest
+    needs: build-code
+    steps:
+      - name: Deployment of code
+        run: echo "Deploying the code..."
