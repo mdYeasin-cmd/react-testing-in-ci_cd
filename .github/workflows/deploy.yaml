@@ -96,4 +96,4 @@ jobs:
           ssh $EC2_USER@$EC2_HOST "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && pm2 delete vite-app || true"
 
           # Start the application with PM2
-          ssh $EC2_USER@$EC2_HOST "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && cd ~/app && pm2 start --name "vite-app" npm -- run dev"
+          ssh $EC2_USER@$EC2_HOST "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && cd ~/app && pm2 start --name "vite-app" npm -- run prod"

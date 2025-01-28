@@ -9,13 +9,15 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest --run --reporter verbose",
-    "start": "node index.js"
+    "start": "node index.js",
+    "prod": "serve -s dist -p 5000"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-redux": "^9.1.2"
+    "react-redux": "^9.1.2",
+    "serve": "^14.2.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
