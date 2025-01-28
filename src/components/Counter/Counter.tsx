@@ -48,7 +48,7 @@ const Counter = () => {
           className="px-4 py-2 bg-green-500 text-white rounded"
           onClick={() => dispatch(incrementByAmount(customAmount))}
         >
-          Increment by Amount
+          Increment by Amount Click Here
         </button>
       </div>
     </div>
