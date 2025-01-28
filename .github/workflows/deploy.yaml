@@ -79,20 +79,20 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
         run: |
           # Create deployment directory
-          ssh $EC2_HOST@EC2_USER "mkdir -p ~/app"
+          ssh $EC2_HOST@$EC2_USER "mkdir -p ~/app"
 
           # Copy files to EC2 instance
           rsync -avz \
             --exclude='.git' \
             --exclude='node_modules' \
             --exclude='.github' \
-            . $EC2_HOST@EC2_USER:~/app/
+            . $EC2_HOST@$EC2_USER:~/app/
 
           # Install production dependencies on EC2
-          ssh $EC2_HOST@EC2_USER "cd ~/app && export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && npm install"
+          ssh $EC2_HOST@$EC2_USER "cd ~/app && export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && npm install"
 
           # Stop existing PM2 process if it exists
-          ssh $EC2_HOST@EC2_USER "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && pm2 delete vite-app || true"
+          ssh $EC2_HOST@$EC2_USER "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && pm2 delete vite-app || true"
 
           # Start the application with PM2
-          ssh $EC2_HOST@EC2_USER "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && cd ~/app && pm2 start npm --name "vite-app" -- dev"
+          ssh $EC2_HOST@$EC2_USER "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && cd ~/app && pm2 start npm --name "vite-app" -- dev"
