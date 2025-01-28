@@ -49,5 +49,50 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-code
     steps:
-      - name: Deployment of code
-        run: echo "Deploying the code..."
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.3
+
+      - name: Checkout code from repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the code
+        run: npm run build
+
+        # You should give a try using making a bash script
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+        run: |
+          # Create deployment directory
+          ssh $EC2_HOST@EC2_USER "mkdir -p ~/app"
+
+          # Copy files to EC2 instance
+          rsync -avz \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='.github' \
+            . $EC2_HOST@EC2_USER:~/app/
+
+          # Install production dependencies on EC2
+          ssh $EC2_HOST@EC2_USER "cd ~/app && export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && npm install"
+
+          # Stop existing PM2 process if it exists
+          ssh $EC2_HOST@EC2_USER "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && pm2 delete vite-app || true"
+
+          # Start the application with PM2
+          ssh $EC2_HOST@EC2_USER "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && cd ~/app && pm2 start npm --name "vite-app" -- dev"
