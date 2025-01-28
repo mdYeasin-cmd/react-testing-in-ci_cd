@@ -89,11 +89,14 @@ jobs:
             --exclude='.github' \
             . $EC2_USER@$EC2_HOST:~/app/
 
-          # Install production dependencies on EC2
-          ssh $EC2_USER@$EC2_HOST "cd ~/app && export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && npm install"
+          # Run the deployment script
+          ssh $EC2_USER@$EC2_HOST "bash ~/deploy.sh"
 
-          # Stop existing PM2 process if it exists
-          ssh $EC2_USER@$EC2_HOST "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && pm2 delete vite-app || true"
+# Install production dependencies on EC2
+# ssh $EC2_USER@$EC2_HOST "cd ~/app && export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && npm install"
 
-          # Start the application with PM2
-          ssh $EC2_USER@$EC2_HOST "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && cd ~/app && pm2 start --name "vite-app" npm -- run prod"
+# Stop existing PM2 process if it exists
+# ssh $EC2_USER@$EC2_HOST "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && pm2 delete vite-app || true"
+
+# Start the application with PM2
+# ssh $EC2_USER@$EC2_HOST "export PATH=$PATH:/run/user/1000/fnm_multishells/962_1738074503081/bin && cd ~/app && pm2 start --name "vite-app" npm -- run prod"
